@@ -1,0 +1,7 @@
+h1{
+    color: #333;
+}
+
+.badge { padding: 4px 10px; color: #fff; }
+.badge.online { background: #2e7d32; }
+.badge.offline { background: #c62828; }
