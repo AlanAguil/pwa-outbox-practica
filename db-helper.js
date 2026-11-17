@@ -1,5 +1,5 @@
 const DB_NAME = 'pwa-outbox-db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const STORE_NAME = 'transacciones_pendientes';
 
 function abrirDB() {
