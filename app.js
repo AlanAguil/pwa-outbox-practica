@@ -1,26 +1,12 @@
-// Ejemplo de guardado y lectura encadenada con .then() y .catch()
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
 
-const capacidadesPWA = {
-    serviceWorker: 'serviceWorker' in navigator,
-    cacheAPI: 'caches' in window,
-    indexDB: 'indexedDB' in window,
-    pushNotification: 'pushManager' in window,
-    webBluetooth: 'bluetooth' in navigator,
-    storage: navigator.storage && 'storage' in navigator.storage,
-}
-
-if (capacidadesPWA.serviceWorker) {
-    navigator.serviceWorker.register("./sw.js");
-    console.log("El servicio service Woker está disponible");
-
-    navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data && event.data.tipo === 'OUTBOX_SINCRONIZADO') {
-            console.log('[UI] Confirmación recibida del Service Worker. Actualizando bandeja...');
-            renderizarColaOutbox();
-        }
-    });
-} else {
-    console.log("El servicio service Woker no está disponible")
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data && event.data.tipo === 'OUTBOX_SINCRONIZADO') {
+      console.log('[UI] Confirmación recibida del Service Worker. Actualizando bandeja...');
+      renderizarColaOutbox();
+    }
+  });
 }
 
 function procesarEnvioReporte(datosFormulario) {
@@ -44,7 +30,7 @@ function procesarEnvioReporte(datosFormulario) {
             });
         })
         .catch(() => {
-            console.warn('[Outbox] Sin conexión. Encolando transacción localmente...');
+            console.warn('[Outbox] Sin conexión. Encolando en IndexedDB...');
 
             return guardarRegistro({
                 ...datosFormulario,
@@ -68,7 +54,7 @@ function procesarEnvioReporte(datosFormulario) {
         });
 }
 
-function sincronizarPendientes() {
+function sincronizarPendientesFallback() {
     console.log('[Outbox] Conexión detectada. Buscando registros pendientes...');
 
     return obtenerTodosLosRegistros()
@@ -178,9 +164,10 @@ function actualizarIndicadorRed() {
 window.addEventListener('online', () => {
     actualizarIndicadorRed();
 
+    // Degradación elegante: Solo sincronizar desde UI si el navegador NO soporta Background Sync (ej. Safari/iOS)
     if (!('SyncManager' in window)) {
         console.log('[Outbox] Navegador sin SyncManager. Ejecutando fallback por evento online...');
-        sincronizarPendientes();
+        sincronizarPendientesFallback();
     }
 });
 

@@ -1,6 +1,6 @@
 importScripts('./db-helper.js');
 // Definición de contenedores versionados y límites
-const CACHE_STATIC_NAME = 'static-outbox-v3';
+const CACHE_STATIC_NAME = 'static-outbox-v5';
 const CACHE_DYNAMIC_NAME = 'dynamic-v3';
 const DYNAMIC_LIMIT = 5; // Límite máximo de elementos en caché dinámica
 const TTL_MAX_SECONDS = 30; // Tiempo de vida máximo de 30 segundos para pruebas
@@ -109,7 +109,7 @@ self.addEventListener('sync', (event) => {
             sincronizarPendientesSW()
                 .catch((error) => {
                     console.error('[SW-Sync] Falla en sincronización; el navegador reintentará luego:', error);
-                    // Relanzar el error indica al navegador que debe programar un reintento
+                    // Relanzar el error indica al navegador que debe programar un reintento automático
                     throw error;
                 })
         );
