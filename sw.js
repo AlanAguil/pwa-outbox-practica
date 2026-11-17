@@ -1,7 +1,7 @@
 
 // Definición de contenedores versionados y límites
-const CACHE_STATIC_NAME = 'static-v1';
-const CACHE_DYNAMIC_NAME = 'dynamic-v1';
+const CACHE_STATIC_NAME = 'static-v2';
+const CACHE_DYNAMIC_NAME = 'dynamic-v2';
 const DYNAMIC_LIMIT = 5; // Límite máximo de elementos en caché dinámica
 const TTL_MAX_SECONDS = 30; // Tiempo de vida máximo de 30 segundos para pruebas
 
